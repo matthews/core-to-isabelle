@@ -114,14 +114,10 @@ lemma fresh_V[simp]:
 by (simp add: fresh_def)
 
 nominal_primrec eval :: "lam \<Rightarrow> env \<Rightarrow> V" where
-  "eval (Var v) env = env v"
-| "eval (App x y) env = from_lam\<cdot>(eval x env)\<cdot>(eval y env)"
-| "v\<sharp>env \<Longrightarrow> eval (Lam [v].x) env = lam\<cdot>(\<Lambda> (y::V). eval x (env(v := y)))"
-apply(finite_guess)
-prefer 3
-apply(finite_guess)
-apply(finite_guess)
-apply(finite_guess)
+  "eval (Var v) = (\<lambda>env. env v)"
+| "eval (App x y) = (\<lambda>env. from_lam\<cdot>(eval x env)\<cdot>(eval y env))"
+| "eval (Lam [v].x) = (\<lambda>env. lam\<cdot>(\<Lambda> (y::V). eval x (env(v := y))))"
+apply(finite_guess)+
 apply(rule TrueI)+
 defer
 apply fresh_guess
